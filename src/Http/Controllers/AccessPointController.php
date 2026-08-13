@@ -54,13 +54,14 @@ final class AccessPointController extends Controller
         }
 
         if ($search !== '') {
-            $query->where(function ($inner) use ($search): void {
-                $inner->where('ap_name', 'like', "%{$search}%")
-                    ->orWhere('local_ip', 'like', "%{$search}%")
-                    ->orWhere('radio_mac', 'like', "%{$search}%")
-                    ->orWhere('channels', 'like', "%{$search}%")
-                    ->orWhere('devices.hostname', 'like', "%{$search}%")
-                    ->orWhere('devices.sysName', 'like', "%{$search}%");
+            $escaped = DB::escapeLike($search);
+            $query->where(function ($inner) use ($escaped): void {
+                $inner->where('ap_name', 'like', "%{$escaped}%")
+                    ->orWhere('local_ip', 'like', "%{$escaped}%")
+                    ->orWhere('radio_mac', 'like', "%{$escaped}%")
+                    ->orWhere('channels', 'like', "%{$escaped}%")
+                    ->orWhere('devices.hostname', 'like', "%{$escaped}%")
+                    ->orWhere('devices.sysName', 'like', "%{$escaped}%");
             });
         }
 
