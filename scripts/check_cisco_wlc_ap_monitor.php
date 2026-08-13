@@ -6,6 +6,8 @@ declare(strict_types=1);
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Support\Facades\DB;
 
+set_time_limit(30);
+
 $base = getenv('LIBRENMS_BASE') ?: '/opt/librenms';
 require $base . '/vendor/autoload.php';
 $app = require $base . '/bootstrap/app.php';
