@@ -121,7 +121,7 @@ final class PollCiscoWlcAccessPoints extends Command
             }
 
             if ($wasDown) {
-                $ap->transition_count = (int) $ap->transition_count + 1;
+                $ap->transition_count = DB::raw('transition_count + 1');
                 $this->line("{$hostname}: RECOVERED {$name}");
             }
 
@@ -142,7 +142,7 @@ final class PollCiscoWlcAccessPoints extends Command
                 if ($ap->state !== 'down') {
                     $ap->state = 'down';
                     $ap->down_since = $now;
-                    $ap->transition_count = (int) $ap->transition_count + 1;
+                    $ap->transition_count = DB::raw('transition_count + 1');
                     $ap->save();
                     $this->warn("{$hostname}: DOWN {$ap->ap_name}");
                 }
@@ -247,12 +247,12 @@ final class PollCiscoWlcAccessPoints extends Command
             }
 
             $hex = preg_replace('/\s+/', '', $matches[2]);
-            $binary = is_string($hex) ? @hex2bin($hex) : false;
+            $binary = is_string($hex) ? hex2bin($hex) : false;
             if ($binary === false || ! in_array(strlen($binary), [4, 16], true)) {
                 continue;
             }
 
-            $ip = @inet_ntop($binary);
+            $ip = inet_ntop($binary);
             if ($ip !== false) {
                 $addresses[$matches[1]] = $ip;
             }
